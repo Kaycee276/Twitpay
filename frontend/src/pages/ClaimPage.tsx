@@ -21,6 +21,8 @@ interface Transaction {
 	isExpired: boolean;
 }
 
+const API_URL = import.meta.env.VITE_BACKEND_API_URL || "http://localhost:4000";
+
 const ClaimPage = () => {
 	const { transactionId } = useParams<{ transactionId: string }>();
 	const navigate = useNavigate();
@@ -38,7 +40,7 @@ const ClaimPage = () => {
 	const fetchTransaction = async () => {
 		try {
 			const response = await fetch(
-				`http://localhost:4000/api/transactions/${transactionId}`
+				`${API_URL}/api/transactions/${transactionId}`
 			);
 			if (!response.ok) {
 				throw new Error("Transaction not found");

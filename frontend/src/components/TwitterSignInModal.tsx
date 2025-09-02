@@ -23,6 +23,8 @@ const modalVariants = {
 	},
 };
 
+const API_URL = import.meta.env.VITE_BACKEND_API_URL || "http://localhost:4000";
+
 const TwitterSignInModal: React.FC<TwitterSignInModalProps> = ({
 	isOpen,
 	onClose,
@@ -64,7 +66,7 @@ const TwitterSignInModal: React.FC<TwitterSignInModalProps> = ({
 							<button
 								className="flex items-center gap-2 px-6 py-3 bg-cyan-500 hover:bg-cyan-600 text-white rounded-full font-semibold text-lg shadow transition-all duration-200"
 								onClick={() => {
-									window.location.href = "http://localhost:4000/auth/twitter";
+									window.location.href = `${API_URL}/auth/twitter`;
 								}}
 							>
 								<FaXTwitter className="w-5 h-5" />

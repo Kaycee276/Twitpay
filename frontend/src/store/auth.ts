@@ -1,5 +1,7 @@
 import { create } from "zustand";
 
+const API_URL = import.meta.env.VITE_BACKEND_API_URL || "http://localhost:4000";
+
 export interface UserProfile {
 	id: string;
 	username: string;
@@ -66,7 +68,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 	checkAuthStatus: async () => {
 		set({ loading: true });
 		try {
-			const response = await fetch("http://localhost:4000/auth/status", {
+			const response = await fetch(`${API_URL}/auth/status`, {
 				credentials: "include",
 			});
 
@@ -76,12 +78,9 @@ export const useAuthStore = create<AuthState>((set) => ({
 
 				// Fetch user activity (transactions and claims)
 				try {
-					const activityResponse = await fetch(
-						"http://localhost:4000/api/activity",
-						{
-							credentials: "include",
-						}
-					);
+					const activityResponse = await fetch(`${API_URL}/api/activity`, {
+						credentials: "include",
+					});
 
 					if (activityResponse.ok) {
 						const activityData = await activityResponse.json();
@@ -105,12 +104,9 @@ export const useAuthStore = create<AuthState>((set) => ({
 
 	fetchActivity: async () => {
 		try {
-			const activityResponse = await fetch(
-				"http://localhost:4000/api/activity",
-				{
-					credentials: "include",
-				}
-			);
+			const activityResponse = await fetch(`${API_URL}/api/activity`, {
+				credentials: "include",
+			});
 
 			if (activityResponse.ok) {
 				const activityData = await activityResponse.json();
@@ -123,7 +119,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
 	fetchStats: async () => {
 		try {
-			const statsResponse = await fetch("http://localhost:4000/api/stats", {
+			const statsResponse = await fetch(`${API_URL}/api/stats`, {
 				credentials: "include",
 			});
 
@@ -138,7 +134,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
 	logout: async () => {
 		try {
-			await fetch("http://localhost:4000/auth/logout", {
+			await fetch(`${API_URL}/auth/logout`, {
 				method: "POST",
 				credentials: "include",
 			});

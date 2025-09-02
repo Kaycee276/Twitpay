@@ -9,7 +9,7 @@ const { supabase } = require("./supabase");
 const { contract, ethers } = require("./contract");
 
 const app = express();
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 
 const bearerToken = process.env.TWITTER_BEARER_TOKEN;
 

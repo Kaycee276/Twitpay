@@ -30,6 +30,8 @@ type CreateModalProps = {
 	isOpen: boolean;
 };
 
+const API_URL = import.meta.env.VITE_BACKEND_API_URL || "http://localhost:4000";
+
 const CreateModal = ({ setOpenModal, isOpen }: CreateModalProps) => {
 	const {
 		token,
@@ -76,7 +78,7 @@ const CreateModal = ({ setOpenModal, isOpen }: CreateModalProps) => {
 			const amount = Number.parseFloat(amountPerUser);
 			const totalAmount = maxRecipients ? amount * maxRecipients : amount;
 
-			const response = await fetch("http://localhost:4000/api/transactions", {
+			const response = await fetch(`${API_URL}/api/transactions`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

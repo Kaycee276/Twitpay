@@ -12,6 +12,8 @@ interface VerifyModalProps {
 	}) => void;
 }
 
+const API_URL = import.meta.env.VITE_BACKEND_API_URL || "http://localhost:4000";
+
 const VerifyModal = ({
 	setOpenModal,
 	isOpen,
@@ -41,7 +43,7 @@ const VerifyModal = ({
 			}
 
 			// Call verification API
-			const response = await fetch("http://localhost:4000/api/verify", {
+			const response = await fetch(`${API_URL}/api/verify`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
