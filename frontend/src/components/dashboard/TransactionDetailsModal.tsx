@@ -10,7 +10,7 @@ const TransactionDetailsModal = () => {
 
 	// Find the selected transaction
 	const transaction = transactions.find(
-		(t, index) => index.toString() === transactionId
+		(_, index) => index.toString() === transactionId
 	);
 
 	if (!transaction) return null;

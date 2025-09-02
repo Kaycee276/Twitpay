@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { XCircle, Clock, Gift, Copy, ExternalLink } from "lucide-react";
@@ -33,18 +33,16 @@ const ClaimPage = () => {
 	const [copiedId, setCopiedId] = useState(false);
 	const [copiedKeywords, setCopiedKeywords] = useState(false);
 
-	useEffect(() => {
-		fetchTransaction();
-	}, [transactionId]);
-
-	const fetchTransaction = async () => {
+	const fetchTransaction = useCallback(async () => {
 		try {
 			const response = await fetch(
 				`${API_URL}/api/transactions/${transactionId}`
 			);
+
 			if (!response.ok) {
 				throw new Error("Transaction not found");
 			}
+
 			const data = await response.json();
 			setTransaction(data);
 
@@ -61,7 +59,11 @@ const ClaimPage = () => {
 		} finally {
 			setLoading(false);
 		}
-	};
+	}, [transactionId, setTransaction, setError, setLoading]);
+
+	useEffect(() => {
+		fetchTransaction();
+	}, [fetchTransaction]);
 
 	const copyToClipboard = async (text: string, type: "id" | "keywords") => {
 		try {
