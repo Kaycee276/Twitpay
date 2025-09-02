@@ -16,7 +16,7 @@ const bearerToken = process.env.TWITTER_BEARER_TOKEN;
 // CORS setup (allow frontend dev server)
 app.use(
 	cors({
-		origin: "http://localhost:4006",
+		origin: `${PORT}`,
 		credentials: true,
 	})
 );
@@ -98,7 +98,7 @@ app.get(
 	passport.authenticate("twitter", { failureRedirect: "/" }),
 	(req, res) => {
 		// Successful authentication, redirect to dashboard
-		res.redirect("http://localhost:4006/dashboard");
+		res.redirect(`${PORT}/dashboard`);
 	}
 );
 
