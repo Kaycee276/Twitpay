@@ -23,7 +23,7 @@ const modalVariants = {
 	},
 };
 
-const API_URL = import.meta.env.VITE_BACKEND_API_URL || "http://localhost:4000";
+const API_URL = import.meta.env.VITE_BACKEND_API_URL;
 
 const TwitterSignInModal: React.FC<TwitterSignInModalProps> = ({
 	isOpen,
