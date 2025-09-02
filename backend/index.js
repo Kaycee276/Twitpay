@@ -142,6 +142,7 @@ app.post("/api/transactions", async (req, res) => {
 			receiver,
 			totalAmount,
 			maxRecipients,
+			// canStopEarly,
 		} = req.body;
 
 		// Validate required fields
@@ -191,14 +192,24 @@ app.post("/api/transactions", async (req, res) => {
 		try {
 			const durationInSeconds = parseInt(expiration) * 3600; // hours to seconds
 			const amountInWei = ethers.parseEther(amountPerUser.toString());
-			
-			await contract.createGiveaway(
-				transactionId,
-				amountInWei,
-				maxRecipients || 0,
-				durationInSeconds,
-				{ value: ethers.parseEther(totalAmount.toString()) }
-			);
+
+			// For USDC, we need to handle it differently since it's an ERC-20 token
+			if (token === "usdc") {
+				// For now, we'll just log that this is a USDC transaction
+				// In a real implementation, we would interact with the USDC contract
+				console.log(
+					"USDC transaction created - would interact with USDC contract here"
+				);
+			} else {
+				// ETH transaction
+				await contract.createBounty(
+					transactionId,
+					amountInWei,
+					maxRecipients || 0,
+					durationInSeconds,
+					{ value: ethers.parseEther(totalAmount.toString()) }
+				);
+			}
 		} catch (contractError) {
 			console.error("Contract error:", contractError);
 			// Continue without failing - contract is optional for now
@@ -267,9 +278,7 @@ app.post("/api/transactions/:id/claim", async (req, res) => {
 		}
 
 		// Check if transaction is expired
-		if (new Date(transaction.expires_at) < new Date()) {
-			return res.status(400).json({ error: "Transaction has expired" });
-		}
+		const isExpired = new Date(transaction.expires_at) < new Date();
 
 		// Check if transaction is still active
 		if (transaction.status !== "active") {
@@ -288,6 +297,25 @@ app.post("/api/transactions/:id/claim", async (req, res) => {
 			return res
 				.status(400)
 				.json({ error: "You have already claimed this transaction" });
+		}
+
+		// Check if claiming is allowed (either transaction allows early claiming or it's expired)
+		const canClaim = isExpired || transaction.can_stop_early;
+
+		if (!canClaim) {
+			// If claiming is not allowed, check if user is in whitelist
+			const { data: whitelistEntry } = await supabase
+				.from("whitelist")
+				.select("*")
+				.eq("transaction_id", id)
+				.eq("twitter_id", twitterId)
+				.single();
+
+			if (!whitelistEntry) {
+				return res
+					.status(400)
+					.json({ error: "You must verify your tweet before claiming" });
+			}
 		}
 
 		// Check max recipients limit
@@ -441,7 +469,7 @@ app.post("/api/verify", async (req, res) => {
 				.json({ error: "Could not retrieve tweet content" });
 		}
 
-		const tweetTextLower = tweetText.toLowerCase();
+		// const tweetTextLower = tweetText.toLowerCase();
 		const keywords = (transaction.keywords || []).map((k) => k.toLowerCase());
 
 		const missingKeywords = keywords.filter(
@@ -454,6 +482,25 @@ app.post("/api/verify", async (req, res) => {
 			});
 		}
 
+		// Add user to whitelist
+		const { data: whitelistEntry, error: whitelistError } = await supabase
+			.from("whitelist")
+			.insert([
+				{
+					transaction_id: transactionId,
+					twitter_id: req.user.id,
+					twitter_username: req.user.username,
+					tweet_url: tweetUrl,
+				},
+			])
+			.select()
+			.maybeSingle();
+
+		if (whitelistError) {
+			console.error("Error adding to whitelist:", whitelistError);
+			// Continue without failing - whitelist is optional for now
+		}
+
 		// Process claim
 		const { data: claim, error: claimError } = await supabase
 			.from("claims")
@@ -464,7 +511,6 @@ app.post("/api/verify", async (req, res) => {
 					twitter_username: req.user.username,
 					claimed_at: new Date(),
 					amount: transaction.amount_per_user,
-					// tweet_url: tweetUrl,
 				},
 			])
 			.select()

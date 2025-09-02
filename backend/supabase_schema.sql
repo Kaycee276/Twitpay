@@ -25,8 +25,21 @@ CREATE TABLE IF NOT EXISTS claims (
     amount DECIMAL NOT NULL
 );
 
+-- Create whitelist table
+CREATE TABLE IF NOT EXISTS whitelist (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    transaction_id TEXT NOT NULL REFERENCES transactions(id),
+    twitter_id TEXT NOT NULL,
+    twitter_username TEXT NOT NULL,
+    verified_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    tweet_url TEXT,
+    UNIQUE(transaction_id, twitter_id)
+);
+
 -- Create indexes for performance
 CREATE INDEX idx_transactions_creator_id ON transactions(creator_id);
 CREATE INDEX idx_transactions_status ON transactions(status);
 CREATE INDEX idx_claims_transaction_id ON claims(transaction_id);
 CREATE INDEX idx_claims_twitter_id ON claims(twitter_id);
+CREATE INDEX idx_whitelist_transaction_id ON whitelist(transaction_id);
+CREATE INDEX idx_whitelist_twitter_id ON whitelist(twitter_id);

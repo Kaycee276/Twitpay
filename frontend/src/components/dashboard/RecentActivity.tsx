@@ -2,9 +2,11 @@ import { motion } from "framer-motion";
 import { AlertCircle } from "lucide-react";
 import { useAuthStore } from "../../store/auth";
 import { formatDate } from "../../utils/formatDate";
+import useTransactionDetailsModal from "../../store/transactionDetailsModal";
 
 const RecentActivity = () => {
 	const { transactions } = useAuthStore();
+	const { openModal } = useTransactionDetailsModal();
 
 	// Function to determine status color based on transaction status
 	const getStatusColor = (status: string) => {
@@ -21,6 +23,8 @@ const RecentActivity = () => {
 				return "text-yellow-400";
 			case "cancelled":
 				return "text-gray-400";
+			case "claiming_enabled":
+				return "text-cyan-400";
 			default:
 				return "text-green-400";
 		}
@@ -41,6 +45,8 @@ const RecentActivity = () => {
 				return "bg-yellow-500/10";
 			case "cancelled":
 				return "bg-gray-500/10";
+			case "claiming_enabled":
+				return "bg-cyan-500/10";
 			default:
 				return "bg-green-500/10";
 		}
@@ -66,7 +72,8 @@ const RecentActivity = () => {
 					{transactions.map((transaction, index) => (
 						<div
 							key={index}
-							className="flex items-center justify-between p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"
+							className="flex items-center justify-between p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+							onClick={() => openModal(index.toString())}
 						>
 							<div className="flex-1">
 								<p className="text-white font-medium">{transaction.type}</p>

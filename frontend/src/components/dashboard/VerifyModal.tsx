@@ -146,6 +146,9 @@ const VerifyModal = ({
 									<p className="text-gray-300">
 										Your tweet has been verified successfully!
 									</p>
+									<p className="text-gray-400 text-sm mt-2">
+										You can now claim your rewards from the transaction page.
+									</p>
 								</motion.div>
 							) : (
 								<motion.form

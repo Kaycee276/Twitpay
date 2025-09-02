@@ -10,7 +10,7 @@ import ClaimPage from "./pages/ClaimPage";
 import { createAppKit } from "@reown/appkit/react";
 
 import { WagmiProvider } from "wagmi";
-import { baseSepolia, sepolia } from "@reown/appkit/networks";
+import { baseSepolia } from "@reown/appkit/networks";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
 
@@ -32,7 +32,7 @@ const metadata = {
 
 // 4. Create Wagmi Adapter
 const wagmiAdapter = new WagmiAdapter({
-	networks: [baseSepolia, sepolia],
+	networks: [baseSepolia],
 	projectId,
 	// ssr: true,
 });
@@ -40,7 +40,7 @@ const wagmiAdapter = new WagmiAdapter({
 // 5. Create modal
 createAppKit({
 	adapters: [wagmiAdapter],
-	networks: [baseSepolia, sepolia],
+	networks: [baseSepolia],
 	projectId,
 	metadata,
 	features: {

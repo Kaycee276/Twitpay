@@ -13,7 +13,7 @@ contract TwitpayEscrowScript is Script {
         vm.startBroadcast();
 
         
-        // escrow = new TwitpayEscrow();
+         escrow = new TwitpayEscrow(0xD271f92c9216f7b6918881e2d89573b3805c4866);
 
         vm.stopBroadcast();
     }

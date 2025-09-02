@@ -14,7 +14,10 @@ import ExpirationSelector from "../../common/ExpirationSelector";
 import { useState } from "react";
 import { useAuthStore } from "../../store/auth";
 
-const tokenOptions = [{ label: "ETH (Base)", value: "eth" }];
+const tokenOptions = [
+	{ label: "ETH (Base)", value: "eth" },
+	{ label: "USDC (Base)", value: "usdc" },
+];
 
 const expirationOptions = [
 	{ label: "24 hours", value: 24 },
@@ -32,6 +35,7 @@ const CreateModal = ({ setOpenModal, isOpen }: CreateModalProps) => {
 		token,
 		amountPerUser,
 		keywords,
+		// canStopEarly,
 		expiration,
 		receiver,
 		loading,
@@ -39,6 +43,7 @@ const CreateModal = ({ setOpenModal, isOpen }: CreateModalProps) => {
 		setToken,
 		setAmountPerUser,
 		setKeywords,
+		// setCanStopEarly,
 		setExpiration,
 		setReceiver,
 		setMaxRecipients,
@@ -452,7 +457,7 @@ const CreateModal = ({ setOpenModal, isOpen }: CreateModalProps) => {
 
 								<motion.div
 									className="flex justify-end space-x-4 pt-4"
-									custom={5}
+									custom={6}
 									variants={formItemVariants}
 									initial="hidden"
 									animate="visible"

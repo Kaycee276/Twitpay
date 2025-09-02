@@ -45,6 +45,13 @@ const ClaimPage = () => {
 			}
 			const data = await response.json();
 			setTransaction(data);
+
+			// Copy transaction ID to clipboard
+			if (data.id) {
+				navigator.clipboard.writeText(data.id).catch(() => {
+					console.log("Could not copy transaction ID to clipboard");
+				});
+			}
 		} catch (err) {
 			setError(
 				err instanceof Error ? err.message : "Failed to load transaction"
@@ -242,9 +249,11 @@ const ClaimPage = () => {
 							<ol className="text-sm text-gray-300 space-y-1 list-decimal list-inside">
 								<li>Click "Post on Twitter" below</li>
 								<li>Post the pre-filled tweet</li>
-								<li>Copy your Transaction ID (already copied for you)</li>
+								<li>Copy the URL of your tweet</li>
+								<li>Copy your Transaction ID</li>
 								<li>
-									Return to dashboard and paste your tweet link + Transaction ID
+									Return to dashboard and click "Verify Tweet" to paste your
+									tweet URL and Transaction ID
 								</li>
 							</ol>
 						</div>

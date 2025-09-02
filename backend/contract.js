@@ -5,11 +5,16 @@ const PRIVATE_KEY = process.env.PRIVATE_KEY;
 const RPC_URL = process.env.RPC_URL || "https://sepolia.base.org";
 
 const CONTRACT_ABI = [
-	"function createGiveaway(string transactionId, uint256 amountPerUser, uint256 maxRecipients, uint256 duration) payable",
-	"function claimReward(string transactionId, string twitterId, address recipient)",
-	"function cancelGiveaway(string transactionId)",
-	"function getGiveawayInfo(string transactionId) view returns (address, uint256, uint256, uint256, uint256, uint256, bool)",
-	"function hasClaimed(string transactionId, string twitterId) view returns (bool)",
+	"function createBounty(uint256 expirationDuration, uint256 maxNumberOfRecipient, uint256 amountPerRecipient) payable",
+	"function verifyRecipient(uint256 bountyId, address recipient)",
+	"function claimEther(uint256 bountyId)",
+	"function claimRefund(uint256 bountyId)",
+	"function updateVerifier(address newVerifier)",
+	"function getTransfer(uint256 bountyId) view returns (address, uint256, uint256, uint256, bool, uint256, uint256)",
+	"function hasRecipientClaimed(uint256 bountyId, address recipient) view returns (bool)",
+	"function isVerified(uint256 bountyId, address recipient) view returns (bool)",
+	"function getCreatorTransfers(address creator) view returns (uint256[])",
+	"function isBountyExpired(uint256 bountyId) view returns (bool)",
 ];
 
 const provider = new ethers.JsonRpcProvider(RPC_URL);

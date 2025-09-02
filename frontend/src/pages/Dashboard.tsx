@@ -6,6 +6,7 @@ import StatsGrid from "../components/dashboard/StatsGrid";
 import QuickActions from "../components/dashboard/QuickActions";
 import RecentActivity from "../components/dashboard/RecentActivity";
 import LoadingSpinner from "../components/dashboard/LoadingSpinner";
+import TransactionDetailsModal from "../components/dashboard/TransactionDetailsModal";
 
 const Dashboard = () => {
 	const { loading, checkAuthStatus, fetchActivity, fetchStats } =
@@ -36,6 +37,9 @@ const Dashboard = () => {
 				<QuickActions />
 				<RecentActivity />
 			</div>
+
+			{/* Transaction Details Modal */}
+			<TransactionDetailsModal />
 		</div>
 	);
 };
